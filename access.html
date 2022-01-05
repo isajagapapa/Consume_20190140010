@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WS Consume</title>
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <meta name="google-signin-client_id"
+        content="1040143114818-8s32lvn5pdof5bbkba9v5gi2hvsmicgd.apps.googleusercontent.com">
+    <script src="jquery.js"></script>
+    <script src="myscript.js"></script>
+    <link href="fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="bootstrap.min.css" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,400;0,500;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        rel="stylesheet">
+    <script src="index.js"></script>
+</head>
+
+<body>
+    <!-- Topbar -->
+    <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+        <a class="navbar-brand" href="#">Cemilan WS</a>
+        <ul class="navbar-nav ml-auto">
+            <div class="navbar-nav ms-auto" data-onsuccess="onSignIn">
+                <div id="user" class="mt-4"></div>
+            <div class="topbar-divider d-none d-sm-block"></div>
+            <li class="nav-item">
+                <a class="nav-link" href="index.html" onclick="signOut();" id="" role=" button" data-toggle=""
+                    aria-haspopup="true"
+                    aria-expanded="false">
+                    <span class="mr-2 d-none d-lg-inline text-gray-600 small">Logout</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <!-- End of Topbar -->
+
+    <div id="content" class="container-fluid">
+
+        <!-- Page Heading -->
+        <h1 class="h3 mb-2 text-gray-800">Data Mahasiswa</h1>
+        
+        <!-- Tabel -->
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Tabel Data Mahasiswa</h6>
+            </div>
+            <div class="card-body">
+                <a href="tambahdata.html" class="btn btn-primary mb-3"><i class="fa fa-plus"></i> Tambah Data Mahasiswa</a>
+                <div class="table-responsive">
+                    <table id="Tabel" class="table table-bordered table-hover">
+                        <thead style="background: #4e73df; color: white; text-align:center">
+                            <tr>
+                                <th>NIM</th>
+                                <th>Nama</th>
+                                <th>Alamat</th>
+                                <th>Program Studi</th>
+                                <th>Fakultas</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <!-- <button onclick="wsconsume()" class="btn btn-primary">Show data from url</button> -->
+    <script type="text/javascript">
+        $.ajax({
+            url: 'http://localhost:8080/datamahasiswa/mahasiswa',
+            dataType: 'json',
+            success: function (data) {
+                for (var i = 0; i < data.length; i++) {
+                    var row = $('<tbody><tr><td>' + data[i].nim + '</td><td>' + data[i].nama + '</td><td>' +
+                        data[i].alamat + '</td><td>' + data[i].programstudi + '</td><td>' + data[i]
+                        .fakultas +
+                        '</td><td><a type="button" data-toggle="tooltip" data-placement="top" title="Edit" href="updatedata.html?nim='+ data[i].nim +'" class="btn btn-success btn-sm mb-2"><i class="fa fa-edit"></i></a>  <a type="button" data-toggle="tooltip" data-placement="top" title="Hapus" onclick="del('+data[i].nim+');" class="btn btn-danger btn-sm mb-2"><i class="fa fa-trash"></i></td></tr></tbody>'
+                    );
+                    $('#Tabel').append(row);
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                alert('Error: ' + textStatus + ' - ' + errorThrown);
+            }
+        });
+    </script>
+
+    <!-- Footer -->
+    <footer class="sticky-footer bg-white">
+        <div class="container my-auto">
+            <div class="copyright text-center my-auto">
+                <span>Faisal Fidiyatulloh &copy; 20190140010</span>
+            </div>
+        </div>
+    </footer>
+    <!-- End of Footer -->
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="axiosService.js"></script>
+    <script src="./index.js"></script>
+    <script src="https://apis.google.com/js/platform.js?onload=onLoad" async defer></script>
+    <script>
+        function signOut() {
+            var auth2 = gapi.auth2.getAuthInstance();
+            console.log(gapi.auth2);
+            auth2.signOut().then(function () {
+                    alert("Anda Berhasil Logout");
+                    localStorage.removeItem("nama");
+                    localStorage.removeItem("image");
+                    localStorage.removeItem("email");
+                    window.location.href="/";
+                    window.location.href = "/";
+                })
+                .catch(error => {
+                    console.log(error)
+                });
+        }
+
+        function del(nim){
+        if (window.confirm("Yakin Hapus Data?")===true) {
+        axios.delete(`http://localhost:8080/datamahasiswa/mahasiswa/${nim}`).then((result) => {
+        alert("Hapus Data Berhasil!")
+        window.location.href="/access.html"
+        }).catch((err) => {
+        console.log(err)
+        });
+        }
+        }
+    </script>
+</body>
+
+</html>

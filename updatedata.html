@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Data Mahasiswa</title>
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <meta name="google-signin-client_id"
+        content="1040143114818-8s32lvn5pdof5bbkba9v5gi2hvsmicgd.apps.googleusercontent.com">
+    <link href="fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <div id="content">
+        <!-- Topbar -->
+        <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+            <a class="navbar-brand" href="#">Cemilan WS</a>
+            <ul class="navbar-nav ml-auto">
+                <div class="navbar-nav ms-auto" data-onsuccess="onSignIn">
+                    <div id="user" class="mt-4"></div>
+                <div class="topbar-divider d-none d-sm-block"></div>
+                <li class="nav-item">
+                    <a class="nav-link" href="index.html" onclick="signOut();" id="" role=" button" data-toggle=""
+                        aria-haspopup="true" aria-expanded="false">
+                        <span class="mr-2 d-none d-lg-inline text-gray-600 small">Logout</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        <!-- End of Topbar -->
+    </div>
+    <div id="content" class="container-fluid">
+        <!-- Page Heading -->
+        <h1 class="h3 mb-2 text-gray-800">Data Mahasiswa</h1>
+        <div class="page-breadcrumb">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="access.html" class="breadcrumb-link">Data Mahasiswa</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Edit Data Mahasiswa</li>
+                </ol>
+            </nav>
+        </div>
+        <!-- Form -->
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Edit Data Mahasiswa</h6>
+            </div>
+            <div class="card-body">
+                <form action="buku_add.php" method="POST" enctype="multipart/form-data">
+                    <div class="form-group row">
+                        <label class="col-md-3 col-form-label">NIM</label>
+                        <div class="col-md-9">
+                            <input type="text" id="nim" class="form-control" placeholder="NIM" readonly>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-md-3 col-form-label">Nama</label>
+                        <div class="col-md-9">
+                            <input type="text" id="nama" class="form-control" placeholder="Nama" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-md-3 col-form-label">Alamat</label>
+                        <div class="col-md-9">
+                            <input type="text" id="alamat" class="form-control" placeholder="Alamat" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-md-3 col-form-label">Program Studi</label>
+                        <div class="col-md-9">
+                            <input type="text" id="ps" class="form-control" placeholder="Program Studi"
+                                required>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-md-3 col-form-label">Fakultas</label>
+                        <div class="col-md-9">
+                            <input type="text" id="fakultas" class="form-control" placeholder="Fakultas" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group row mt-5">
+                        <div class="col-md-6">
+                            <!-- back to home -->
+                            <a name="backBtn" id="backBtn" class="btn btn-white btn-block btn-lg mb-2"
+                                href="access.html" role="button">Kembali</a>
+                        </div>
+
+                        <div class="col-md-6">
+                            <!-- input button to submit form. Please check href attribute -->
+                            <button type="button" class="btn btn-primary btn-block btn-lg" onclick="saveData();">Update</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </div>
+    <!-- Footer -->
+    <footer class="sticky-footer bg-white">
+        <div class="container my-auto">
+            <div class="copyright text-center my-auto">
+                <span>Faisal Fidiyatulloh &copy; 20190140010</span>
+            </div>
+        </div>
+    </footer>
+    <!-- End of Footer -->
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="axiosService.js"></script>
+    <script src="index.js"></script>
+    <script src="https://apis.google.com/js/platform.js?onload=onLoad" async defer></script>
+    <script>
+        function signOut() {
+            var auth2 = gapi.auth2.getAuthInstance();
+            console.log(gapi.auth2);
+            auth2.signOut().then(function () {
+                    alert("Anda Berhasil Logout");
+                    window.location.href = "/";
+                })
+                .catch(error => {
+                    console.log(error)
+                });
+        }
+
+        function saveData(){
+        var body = {
+        nim:$("#nim").val(),
+        nama:$("#nama").val(),
+        alamat:$("#alamat").val(),
+        programstudi:$("#ps").val(),
+        fakultas:$("#fakultas").val()
+        }
+        var json = JSON.stringify(body)
+        console.log(json)
+        axios({
+        method:"put",
+        url:url,
+        data:json,
+        headers:{ "Content-Type": "application/json" }
+        })
+        .then((result) => {
+        alert("Data Berhasil Diupdate")
+        window.location.href="/access.html"
+        }).catch((err) => {
+        console.log(error)
+        });
+        }
+
+        function getData(){
+        var url = new URL($(location).attr("href"))
+        var params = url.searchParams.get("nim")
+        console.log(params)
+        axios.get(
+        `http://localhost:8080/datamahasiswa/mahasiswa/${params}`
+        ).then((result) => {
+        console.log(result)
+        $("#nim").val(result.data.nim);
+        $("#nama").val(result.data.nama);
+        $("#alamat").val(result.data.alamat);
+        $("#ps").val(result.data.programstudi);
+        $("#fakultas").val(result.data.fakultas);
+        }).catch((err) => {
+        console.log(error)
+        });
+        }
+
+        var url ="http://localhost:8080/datamahasiswa/mahasiswa";
+        getData()
+    </script>
+</body>
+
+</html>
